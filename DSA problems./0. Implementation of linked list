@@ -1,0 +1,134 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int info;
+    struct node *link;
+};
+
+typedef struct node *NODE;
+
+NODE getnode() {
+    NODE x;
+    x = (NODE)malloc(sizeof(struct node));
+    if (x == NULL) {
+        printf("Out of memory\n");
+        exit(0);
+    }
+    return x;
+}
+
+NODE insert_front(int item, NODE first) {
+    NODE temp = getnode();
+    temp->info = item;
+    temp->link = first;
+    return temp;
+}
+
+NODE insert_end(int item, NODE first) {
+    NODE temp = getnode(), cur;
+    temp->info = item;
+    temp->link = NULL;
+    if (first == NULL) {
+        return temp;
+    }
+    cur = first;
+    while (cur->link != NULL) {
+        cur = cur->link;
+    }
+    cur->link = temp;
+    return first;
+}
+
+NODE delete_front(NODE first) {
+    NODE temp;
+    if (first == NULL) {
+        printf("List is empty, cannot delete\n");
+        return NULL;
+    }
+    temp = first;
+    first = first->link;
+    printf("Item deleted: %d\n", temp->info);
+    free(temp);
+    return first;
+}
+
+NODE delete_end(NODE first) {
+    NODE cur, prev = NULL;
+    if (first == NULL) {
+        printf("List is empty, cannot delete\n");
+        return NULL;
+    }
+    if (first->link == NULL) {
+        printf("Item deleted: %d\n", first->info);
+        free(first);
+        return NULL;
+    }
+    cur = first;
+    while (cur->link != NULL) {
+        prev = cur;
+        cur = cur->link;
+    }
+    printf("Item deleted: %d\n", cur->info);
+    free(cur);
+    prev->link = NULL;
+    return first;
+}
+
+void display(NODE first) {
+    NODE cur;
+    if (first == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+    printf("The contents of the linked list are: ");
+    cur = first;
+    while (cur != NULL) {
+        printf("%d ", cur->info);
+        cur = cur->link;
+    }
+    printf("\n");
+}
+
+int main() {
+    NODE first = NULL;
+    int choice, item;
+
+    while (1) {
+        printf("\n1: Insert Front\n");
+        printf("2: Insert End\n");
+        printf("3: Delete Front\n");
+        printf("4: Delete End\n");
+        printf("5: Display\n");
+        printf("6: Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the item to be inserted at the front: ");
+                scanf("%d", &item);
+                first = insert_front(item, first);
+                break;
+            case 2:
+                printf("Enter the item to be inserted at the end: ");
+                scanf("%d", &item);
+                first = insert_end(item, first);
+                break;
+            case 3:
+                first = delete_front(first);
+                break;
+            case 4:
+                first = delete_end(first);
+                break;
+            case 5:
+                display(first);
+                break;
+            case 6:
+                exit(0);
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+    return 0;
+}
