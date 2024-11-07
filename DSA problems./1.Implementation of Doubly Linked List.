@@ -1,0 +1,235 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a doubly linked list node
+struct node {
+    int data;
+    struct node *prev;
+    struct node *next;
+};
+
+struct node *head = NULL; // Global head pointer
+
+// Function declarations
+void insertion_beginning();
+void insertion_last();
+void insertion_specified();
+void deletion_beginning();
+void deletion_last();
+void deletion_specified();
+void display();
+void search();
+
+int main() {
+    int choice = 0;
+    while (choice != 9) {
+        printf("\n********* Main Menu *********\n");
+        printf("Choose an option from the following list:\n");
+        printf("1. Insert at the beginning\n");
+        printf("2. Insert at the end\n");
+        printf("3. Insert at a specified position\n");
+        printf("4. Delete from beginning\n");
+        printf("5. Delete from the end\n");
+        printf("6. Delete a node after the specified data\n");
+        printf("7. Search\n");
+        printf("8. Display\n");
+        printf("9. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1: insertion_beginning(); break;
+            case 2: insertion_last(); break;
+            case 3: insertion_specified(); break;
+            case 4: deletion_beginning(); break;
+            case 5: deletion_last(); break;
+            case 6: deletion_specified(); break;
+            case 7: search(); break;
+            case 8: display(); break;
+            case 9: exit(0); 
+            default: printf("Invalid choice! Please enter a valid option.\n");
+        }
+    }
+    return 0;
+}
+
+// Function to insert a node at the beginning of the list
+void insertion_beginning() {
+    struct node *ptr = (struct node *)malloc(sizeof(struct node));
+    if (ptr == NULL) {
+        printf("\nOverflow: Memory allocation failed.\n");
+        return;
+    }
+    int item;
+    printf("Enter the item to be inserted: ");
+    scanf("%d", &item);
+    ptr->data = item;
+    ptr->prev = NULL;
+    ptr->next = head;
+    if (head != NULL) {
+        head->prev = ptr;
+    }
+    head = ptr;
+    printf("\nNode inserted at the beginning.\n");
+}
+
+// Function to insert a node at the end of the list
+void insertion_last() {
+    struct node *ptr = (struct node *)malloc(sizeof(struct node));
+    if (ptr == NULL) {
+        printf("\nOverflow: Memory allocation failed.\n");
+        return;
+    }
+    int item;
+    printf("Enter the item to be inserted: ");
+    scanf("%d", &item);
+    ptr->data = item;
+    ptr->next = NULL;
+    if (head == NULL) {
+        ptr->prev = NULL;
+        head = ptr;
+    } else {
+        struct node *temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = ptr;
+        ptr->prev = temp;
+    }
+    printf("\nNode inserted at the end.\n");
+}
+
+// Function to insert a node at a specified position
+void insertion_specified() {
+    int item, loc, i;
+    struct node *ptr, *temp;
+    printf("Enter the position to insert the node: ");
+    scanf("%d", &loc);
+    if (loc == 1) {
+        insertion_beginning();
+        return;
+    }
+    ptr = (struct node *)malloc(sizeof(struct node));
+    if (ptr == NULL) {
+        printf("\nOverflow: Memory allocation failed.\n");
+        return;
+    }
+    printf("Enter the item to be inserted: ");
+    scanf("%d", &item);
+    ptr->data = item;
+    temp = head;
+    for (i = 1; i < loc - 1; i++) {
+        temp = temp->next;
+        if (temp == NULL) {
+            printf("\nThere are less than %d elements.\n", loc);
+            free(ptr);
+            return;
+        }
+    }
+    ptr->next = temp->next;
+    if (temp->next != NULL) {
+        temp->next->prev = ptr;
+    }
+    temp->next = ptr;
+    ptr->prev = temp;
+    printf("\nNode inserted at position %d.\n", loc);
+}
+
+// Function to delete the node at the beginning
+void deletion_beginning() {
+    if (head == NULL) {
+        printf("\nUnderflow: List is empty.\n");
+        return;
+    }
+    struct node *ptr = head;
+    head = head->next;
+    if (head != NULL) {
+        head->prev = NULL;
+    }
+    free(ptr);
+    printf("\nNode deleted from the beginning.\n");
+}
+
+// Function to delete the node at the end
+void deletion_last() {
+    if (head == NULL) {
+        printf("\nUnderflow: List is empty.\n");
+        return;
+    }
+    struct node *ptr = head;
+    if (ptr->next == NULL) {
+        head = NULL;
+    } else {
+        while (ptr->next != NULL) {
+            ptr = ptr->next;
+        }
+        ptr->prev->next = NULL;
+    }
+    free(ptr);
+    printf("\nNode deleted from the end.\n");
+}
+
+// Function to delete a node after a specified value
+void deletion_specified() {
+    if (head == NULL) {
+        printf("\nUnderflow: List is empty.\n");
+        return;
+    }
+    int val;
+    struct node *ptr = head, *temp;
+    printf("Enter the value after which the node is to be deleted: ");
+    scanf("%d", &val);
+    while (ptr != NULL && ptr->data != val) {
+        ptr = ptr->next;
+    }
+    if (ptr == NULL || ptr->next == NULL) {
+        printf("\nCan't delete. The node doesn't exist or is the last node.\n");
+    } else {
+        temp = ptr->next;
+        ptr->next = temp->next;
+        if (temp->next != NULL) {
+            temp->next->prev = ptr;
+        }
+        free(temp);
+        printf("\nNode deleted after %d.\n", val);
+    }
+}
+
+// Function to display the list
+void display() {
+    struct node *ptr = head;
+    if (ptr == NULL) {
+        printf("\nList is empty.\n");
+        return;
+    }
+    printf("List elements are:\n");
+    while (ptr != NULL) {
+        printf("%d\t", ptr->data);
+        ptr = ptr->next;
+    }
+    printf("\n");
+}
+
+// Function to search for an item in the list
+void search() {
+    struct node *ptr = head;
+    int item, i = 1, flag = 0;
+    if (ptr == NULL) {
+        printf("\nList is empty.\n");
+        return;
+    }
+    printf("Enter the item to search for: ");
+    scanf("%d", &item);
+    while (ptr != NULL) {
+        if (ptr->data == item) {
+            printf("Item found at position %d\n", i);
+            flag = 1;
+            break;
+        }
+        ptr = ptr->next;
+        i++;
+    }
+    if (!flag) {
+        printf("Item not found in the list.\n");
+    }
+}
