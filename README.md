@@ -1,6 +1,3 @@
-Here is your entire **README.md** content formatted as a **code block** for GitHub:
-
-```markdown
 # C Programming and DSA Repository 📚💻
 
 Welcome to the **C Programming and DSA Repository**! 🎉  
@@ -25,12 +22,12 @@ To use the programs in this repository, follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/Yaser-123/C-Programming-DSA.git
+   git clone https://github.com/Yaser-123/C-language-basic-problems.git
    ```
 
 2. **Navigate to the project directory**:
    ```bash
-   cd C-Programming-DSA
+   cd C-language-basic-problems
    ```
 
 3. **Compile the C programs** using your C compiler:
@@ -57,8 +54,5 @@ Your contributions help grow this repository and assist others in learning. 🌍
 This project is licensed under the [MIT License](LICENSE).  
 See the LICENSE file for more details.
 
----
-
 Thank you for visiting my **C Programming and DSA Repository**! 🚀  
 I’ll continue to add more projects and DSA topics, so stay tuned for updates. Happy coding! 💡
-```
